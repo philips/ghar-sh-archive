@@ -2,10 +2,12 @@ ghar (git: home as repository)
 
 INSTALL
 =======
+ $ git clone git://ifup.org/philips/ghar.git
+ $ cd ghar
  $ cp ghar $SOMEWHERE_IN_THE_PATH
  $ ghar init
  $ ghar create dotfiles			# to create your first ghar repo
  $ ghar dotfiles add .ghar/config	# Add your first config file: ghar's
- $ ghar dotfiles commit -m "Initial .ghar/config"
+ $ ghar dotfiles commit
  $ ghar dotfiles remote add origin user@host:~/dotfiles.git
  $ ghar dotfiles push origin master
