@@ -1,0 +1,50 @@
+#!/bin/sh
+# Copyright (C) 2009 Brandon Philips <brandon@ifup.org>
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+# 
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+DOTFILE=$HOME/.ghar
+CONFIG=$DOTFILE/config
+
+shopt -s expand_aliases
+[ -e $CONFIG ] && source $CONFIG
+
+die() {
+	[ $# != 2 ] && die "die() called improperly" 1
+	echo $2
+	exit $1
+}
+
+ghar_init() {
+	[ $# != 0 ] && die 1  "init: too many arguments"
+	[ -e $DOTFILE ] && die 1 "Cannont init $HOME/.ghar already exists!"
+
+	mkdir $DOTFILE && touch $CONFIG
+}
+
+ghar_create() {
+	[ $# != 1 ] && die 1  "create: wrong number of arguments"
+	
+	grep "function ghar_$1" $CONFIG > /dev/null\
+		&& die 1 "create: $1 already exists"
+
+	echo "function ghar_$1 () { git --git-dir=\$DOTFILE/$1.git\
+		--work-tree=\$HOME \$@; }" >> $CONFIG
+}
+
+FUNCTION=$1
+shift
+shopt -s expand_aliases
+ghar_${FUNCTION} $@
