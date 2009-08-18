@@ -15,8 +15,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-DOTFILE=$HOME/.ghar
-CONFIG=$DOTFILE/config
+[ z"$GHAR_HOME" == "z" ] && GHAR_HOME=$HOME
+[ z"$GHAR_DIR" == "z" ] && GHAR_DIR=$GHAR_HOME/.ghar
+CONFIG=$GHAR_DIR/config
 
 shopt -s expand_aliases
 [ -e $CONFIG ] && source $CONFIG
@@ -29,9 +30,9 @@ die() {
 
 ghar_init() {
 	[ $# != 0 ] && die 1  "init: too many arguments"
-	[ -e $DOTFILE ] && die 1 "Cannont init $HOME/.ghar already exists!"
+	[ -e $GHAR_DIR ] && die 1 "Cannont init $GHAR_HOME/.ghar already exists!"
 
-	mkdir $DOTFILE && touch $CONFIG
+	mkdir $GHAR_DIR && touch $CONFIG
 }
 
 ghar_create() {
@@ -40,8 +41,8 @@ ghar_create() {
 	grep "function ghar_$1" $CONFIG > /dev/null\
 		&& die 1 "create: $1 already exists"
 
-	echo "function ghar_$1 () { git --git-dir=\$DOTFILE/$1.git\
-		--work-tree=\$HOME \$@; }" >> $CONFIG
+	echo "function ghar_$1 () { git --git-dir=\$GHAR_DIR/$1.git\
+		--work-tree=\$GHAR_HOME \$@; }" >> $CONFIG
 }
 
 FUNCTION=$1
