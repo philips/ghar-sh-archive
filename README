@@ -6,8 +6,8 @@ INSTALL
  $ cd ghar
  $ cp ghar $SOMEWHERE_IN_THE_PATH
  $ ghar init
- $ ghar create dotfiles			# to create your first ghar repo
- $ ghar dotfiles add .ghar/config	# Add your first config file: ghar's
+ $ ghar create dotfiles
+ $ ghar dotfiles add -f .ghar/config
  $ ghar dotfiles commit
  $ ghar dotfiles remote add origin user@host:~/dotfiles.git
  $ ghar dotfiles push origin master

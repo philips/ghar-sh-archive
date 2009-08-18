@@ -38,11 +38,18 @@ ghar_init() {
 ghar_create() {
 	[ $# != 1 ] && die 1  "create: wrong number of arguments"
 	
+	GITDIR=$GHAR_DIR/$1.git
+
 	grep "function ghar_$1" $CONFIG > /dev/null\
 		&& die 1 "create: $1 already exists"
 
 	echo "function ghar_$1 () { git --git-dir=\$GHAR_DIR/$1.git\
 		--work-tree=\$GHAR_HOME \$@; }" >> $CONFIG
+
+	source $CONFIG
+
+	ghar_$1 init
+	echo "*" > $GITDIR/info/exclude
 }
 
 FUNCTION=$1
