@@ -1,0 +1,8 @@
+
+
+	$ ghar init
+	$ ghar create dotfiles
+	$ ghar dotfiles init
+	> Initialized empty Git repository in %GHAR_DIR/dotfiles.git/
+	$ ghar dotfiles add .ghar/config
+	$ ghar dotfiles commit -m "test" > /dev/null
