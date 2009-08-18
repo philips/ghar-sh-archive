@@ -1,0 +1,4 @@
+Feature not implemented
+
+	$ mkdir new-machine
+	$ ghar movein dotfiles new-machine
