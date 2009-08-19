@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (C) 2009 Brandon Philips <brandon@ifup.org>
+# Copyright (C) 2009 Graham Forest <vitaminmoo@obsoleet.org>
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -19,23 +20,32 @@
 [ z"$GHAR_DIR" == "z" ] && GHAR_DIR=$GHAR_HOME/.ghar
 CONFIG=$GHAR_DIR/config
 
+IAM=`basename $0`
+
 shopt -s expand_aliases
 [ -e $CONFIG ] && source $CONFIG
 
+
+say() {
+    [ $# != 1 ] && die "say() called improperly" 1
+    echo "$IAM: $1"
+}
+
 die() {
 	[ $# != 2 ] && die "die() called improperly" 1
-	echo $2
+	say "$2"
 	exit $1
 }
 
-ghar_init() {
+
+ghar_init() { # set up ghar's configuration file
 	[ $# != 0 ] && die 1  "init: too many arguments"
 	[ -e $GHAR_DIR ] && die 1 "Cannont init $GHAR_HOME/.ghar already exists!"
 
 	mkdir $GHAR_DIR && touch $CONFIG
 }
 
-ghar_create() {
+ghar_create() { # create a new repo to add files to
 	[ $# != 1 ] && die 1  "create: wrong number of arguments"
 	
 	GITDIR=$GHAR_DIR/$1.git
@@ -55,4 +65,16 @@ ghar_create() {
 FUNCTION=$1
 shift
 shopt -s expand_aliases
-ghar_${FUNCTION} $@
+
+if [ -z `type -t ghar_$FUNCTION` ]; then
+	echo "git home as repository"
+	echo "usage: ghar <function|repository> [git command]"
+	echo "Comands are:"
+	grep "^ghar_.*() {" $0 | cut -d_ -f2\
+		| sed 's/^/\t/; s/() { # /\t- /'
+	ghar_list
+	[ -z $FUNCTION ] && exit
+	die 1 "error: \"$FUNCTION\" is not a valid function or repository"
+else
+	ghar_${FUNCTION} $@
+fi
