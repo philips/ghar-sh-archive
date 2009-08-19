@@ -1,6 +1,5 @@
 
 
-	$ ghar init
 	$ ghar create dotfiles
 	> Initialized empty Git repository in %GHAR_DIR/dotfiles.git/
 	$ ghar dotfiles add -f .ghar/config

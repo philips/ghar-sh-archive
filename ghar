@@ -48,6 +48,7 @@ ghar_init() { # set up ghar's configuration file
 ghar_create() { # create a new repo to add files to
 	[ $# != 1 ] && die 1  "create: wrong number of arguments"
 	
+	[ ! -e $GHAR_DIR ] && ghar_init
 	GITDIR=$GHAR_DIR/$1.git
 
 	grep "function ghar_$1" $CONFIG > /dev/null\

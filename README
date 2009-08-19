@@ -5,7 +5,6 @@ INSTALL
  $ git clone git://ifup.org/philips/ghar.git
  $ cd ghar
  $ cp ghar $SOMEWHERE_IN_THE_PATH
- $ ghar init
  $ ghar create dotfiles
  $ ghar dotfiles add -f .ghar/config
  $ ghar dotfiles commit
