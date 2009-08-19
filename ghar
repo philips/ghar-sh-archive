@@ -63,6 +63,13 @@ ghar_create() { # create a new repo to add files to
 	echo "*" > $GITDIR/info/exclude
 }
 
+ghar_list() { # list all repos available for use
+	[ $# != 0 ] && die 1  "list: wrong number of arguments"
+	say "valid repositories:"
+	grep "function ghar_" $CONFIG | cut -d_ -f2 | cut -d\  -f1\
+		| sed 's/^/\t/'
+}
+
 FUNCTION=$1
 shift
 shopt -s expand_aliases
