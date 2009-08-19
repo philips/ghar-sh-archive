@@ -1,6 +1,7 @@
 #!/bin/sh
 # Copyright (C) 2009 Brandon Philips <brandon@ifup.org>
 # Copyright (C) 2009 Graham Forest <vitaminmoo@obsoleet.org>
+# Copyright (C) 2009 Gavin McQuillan <gavin@omnifario.us>
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -67,7 +68,7 @@ ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1  "list: wrong number of arguments"
 	say "valid repositories:"
 	grep "function ghar_" $CONFIG | cut -d_ -f2 | cut -d\  -f1\
-		| sed 's/^/\t/'
+		| sed 's/^/	/'
 }
 
 FUNCTION=$1
@@ -79,7 +80,7 @@ if [ -z `type -t ghar_$FUNCTION` ]; then
 	echo "usage: ghar <function|repository> [git command]"
 	echo "Comands are:"
 	grep "^ghar_.*() {" $0 | cut -d_ -f2\
-		| sed 's/^/\t/; s/() { # /\t- /'
+		| sed 's/^/	/; s/() { # /	- /'
 	ghar_list
 	[ -z $FUNCTION ] && exit
 	die 1 "error: \"$FUNCTION\" is not a valid function or repository"
