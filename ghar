@@ -66,7 +66,7 @@ ghar_create() { # create a new repo to add files to
 
 ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1  "list: wrong number of arguments"
-	say "valid repositories:"
+	echo "Repositories:"
 	grep "function ghar_" $CONFIG | cut -d_ -f2 | cut -d\  -f1\
 		| sed 's/^/	/'
 }
@@ -78,7 +78,7 @@ shopt -s expand_aliases
 if [ -z `type -t ghar_$FUNCTION` ]; then
 	echo "git home as repository"
 	echo "usage: ghar <function|repository> [git command]"
-	echo "Comands are:"
+	echo "Commands:"
 	grep "^ghar_.*() {" $0 | cut -d_ -f2\
 		| sed 's/^/	/; s/() { # /	- /'
 	ghar_list
