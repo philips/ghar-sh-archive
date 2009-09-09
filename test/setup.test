@@ -2,7 +2,8 @@
 
 	$ ghar create dotfiles
 	> Initialized empty Git repository in %GHAR_DIR/dotfiles.git/
-	$ ghar dotfiles add -f .ghar/config
+	$ touch %GHAR_HOME/.some_config
+	$ ghar dotfiles add -f %GHAR_HOME/.some_config
 	$ ghar dotfiles status
 	> # On branch master
 	> #
@@ -11,6 +12,6 @@
 	> # Changes to be committed:
 	> #   (use "git rm --cached <file>..." to unstage)
 	> #
-	> #	new file:   .ghar/config
+	> #	new file:   .some_config
 	> #
 	$ ghar dotfiles commit -m "test" > /dev/null

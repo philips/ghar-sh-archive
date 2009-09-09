@@ -19,13 +19,17 @@
 
 [ z"$GHAR_HOME" == "z" ] && GHAR_HOME=$HOME
 [ z"$GHAR_DIR" == "z" ] && GHAR_DIR=$GHAR_HOME/.ghar
-CONFIG=$GHAR_DIR/config
-
 IAM=`basename $0`
+[ -d $GHAR_DIR ] && REPOS=$(find $GHAR_DIR ! -name .git -regex ..*.git$ -exec basename {} .git \;)
 
-shopt -s expand_aliases
-[ -e $CONFIG ] && source $CONFIG
+create_repo_alias() {
+	eval "ghar_$1() \
+		{ git --git-dir=$GHAR_DIR/$1.git --work-tree=$GHAR_HOME \$@; }"
+}
 
+for i in $REPOS; do
+	create_repo_alias $i
+done
 
 say() {
     [ $# != 1 ] && die "say() called improperly" 1
@@ -38,12 +42,11 @@ die() {
 	exit $1
 }
 
-
 ghar_init() { # set up ghar's configuration file
 	[ $# != 0 ] && die 1  "init: too many arguments"
 	[ -e $GHAR_DIR ] && die 1 "Cannot init $GHAR_DIR already exists!"
 
-	mkdir $GHAR_DIR && touch $CONFIG
+	mkdir $GHAR_DIR
 }
 
 ghar_create() { # create a new repo to add files to
@@ -52,28 +55,25 @@ ghar_create() { # create a new repo to add files to
 	[ ! -e $GHAR_DIR ] && ghar_init
 	GITDIR=$GHAR_DIR/$1.git
 
-	grep "function ghar_$1" $CONFIG > /dev/null\
-		&& die 1 "create: $1 already exists"
+	for r in $REPOS; do
+		[ $r = $1 ] && die 1 "create: $1 already exists"
+	done
 
-	echo "function ghar_$1 () { git --git-dir=\$GHAR_DIR/$1.git\
-		--work-tree=\$GHAR_HOME \$@; }" >> $CONFIG
-
-	source $CONFIG
-
+	create_repo_alias $1
 	ghar_$1 init
 	echo "*" > $GITDIR/info/exclude
 }
 
 ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1  "list: wrong number of arguments"
+	[ -z $REPOS ] && return
 	echo "Repositories:"
-	grep "function ghar_" $CONFIG | cut -d_ -f2 | cut -d\  -f1\
-		| sed 's/^/	/'
+	echo $REPOS | sed 's/^/	/' 
 }
 
 FUNCTION=$1
 shift
-shopt -s expand_aliases
+
 
 if [ -z `type -t ghar_$FUNCTION` ]; then
 	echo "git home as repository"
