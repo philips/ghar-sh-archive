@@ -71,17 +71,21 @@ ghar_list() { # list all repos available for use
 	echo $REPOS | sed 's/^/	/' 
 }
 
-FUNCTION=$1
-shift
-
-
-if [ -z `type -t ghar_$FUNCTION` ]; then
+ghar_help() { # provide help
 	echo "git home as repository"
 	echo "usage: ghar <function|repository> [git command]"
 	echo "Commands:"
 	grep "^ghar_.*() {" $0 | cut -d_ -f2\
 		| sed 's/^/	/; s/() { # /	- /'
 	ghar_list
+}
+
+FUNCTION=$1
+shift
+
+
+if [ -z `type -t ghar_$FUNCTION` ]; then
+	ghar_help
 	[ -z $FUNCTION ] && exit
 	die 1 "error: \"$FUNCTION\" is not a valid function or repository"
 else
