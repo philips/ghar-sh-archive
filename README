@@ -1,12 +1,23 @@
 ghar (git: home as repository)
 
+ghar can help you manage your $HOME in git using a collection of git
+repos seperated by topic or privacy. For example if you work on a
+variety of machines and want to syncronize your .emacs but not your .ssh
+then ghar is for you.
+
 INSTALL
 =======
  $ git clone git://ifup.org/philips/ghar.git
  $ cd ghar
  $ cp ghar $SOMEWHERE_IN_THE_PATH
+
+EXAMPLE
+=======
  $ ghar create dotfiles
- $ ghar dotfiles add -f .ghar/config
+ $ ghar dotfiles add -f .emacs
  $ ghar dotfiles commit
  $ ghar dotfiles remote add origin user@host:~/dotfiles.git
  $ ghar dotfiles push origin master
+ $ ghar create mutt
+ $ ghar mutt add -f .mutt
+ $ ghar mutt commit
