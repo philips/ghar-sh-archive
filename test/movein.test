@@ -1,4 +1,29 @@
-Feature not implemented
 
-	$ mkdir new-machine
-	$ ghar movein dotfiles new-machine
+
+	$ ghar create dotfiles > /dev/null
+	$ touch %GHAR_HOME/.some_config
+	$ ghar dotfiles add -f %GHAR_HOME/.some_config
+	$ ghar dotfiles commit -m "test" > /dev/null
+    
+	$ ghar create dotfiles2 > /dev/null
+	$ touch %GHAR_HOME/.some_config2
+	$ ghar dotfiles2 add -f %GHAR_HOME/.some_config2
+	$ ghar dotfiles2 commit -m "test" > /dev/null
+    
+	$ ghar create private > /dev/null
+	$ touch %GHAR_HOME/.some_private_config
+	$ ghar private add -f %GHAR_HOME/.some_private_config
+	$ ghar private commit -m "test" > /dev/null
+
+	$ ghar movein dotfiles dotfiles2 %TEMP_DIR/new-machine/
+
+    $ tree -a -L 2 %TEMP_DIR/new-machine/
+    > %TEMP_DIR/new-machine/
+    > |-- .ghar
+    > |   |-- dotfiles.git
+    > |   |-- dotfiles2.git
+    > |   `-- ghar
+    > |-- .some_config
+    > `-- .some_config2
+    >
+    > 3 directories, 3 files
