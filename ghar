@@ -72,6 +72,41 @@ ghar_list() { # list all repos available for use
 	echo $REPOS | sed 's/^/	/' 
 }
 
+ghar_movein() { # initialize ghar on a remote host
+	[ $# -lt 2 ] && die 1 "movein: not enough arguments"
+	TARGET=${!#} # last arg
+	REPOS_TO_COPY=$(echo $@ | sed "s#$TARGET##") # pop
+
+	for REPO in $REPOS_TO_COPY
+	do
+		REPO_INCLUDES="$REPO_INCLUDES --include=$REPO.git --include=$REPO.git/**"
+	done
+
+	[ z"$SSH_AGENT_PID" != "z" ] && ssh-copy-id "$TARGET"
+
+	# less passwords to copy this way
+	[ ! -f "$GHAR_DIR/$IAM" ] && cp -L "$0" "$GHAR_DIR"
+	rsync -az --include="$GHAR_DIR/" --include="$IAM" $REPO_INCLUDES\
+		--exclude='*' "$GHAR_DIR/" "$TARGET:.ghar"
+	ssh "$TARGET" ".ghar/$IAM _movein_stage2"
+}
+
+ghar__movein_stage2() { # support function for movein
+	[ $# != 0 ] && die 1 "_movein_stage2: wrong number of arguments"
+
+	if [ -z $(which git) ]; then
+		rm -f "$0"
+		die 1 "movein: git doesn't seem to be installed on the remote host"
+	fi
+
+	REPOS=$(find $GHAR_DIR ! -name .git -regex ..*.git$ -exec basename {} .git \;)
+	for REPO in $REPOS
+	do
+		git --git-dir=$GHAR_DIR/$REPO.git archive master\
+			| tar -x -k -C $HOME/ 2>/dev/null # brain-dead tar errors with -k
+	done
+}
+
 ghar_help() { # provide help
 	echo "git home as repository"
 	echo "usage: ghar <function|repository> [git command]"
