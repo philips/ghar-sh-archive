@@ -33,12 +33,12 @@ for i in $REPOS; do
 done
 
 say() {
-    [ $# != 1 ] && die "say() called improperly" 1
-    echo "$IAM: $1"
+	[ $# != 1 ] && die 1 "say() called improperly"
+	echo "$IAM: $1"
 }
 
 die() {
-	[ $# != 2 ] && die "die() called improperly" 1
+	[ $# != 2 ] && die 1 "die() called improperly"
 	say "$2"
 	exit $1
 }
