@@ -67,7 +67,7 @@ ghar_create() { # create a new repo to add files to
 
 ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1 "list: wrong number of arguments"
-	[ -z $REPOS ] && return
+	[ -z "$REPOS" ] && return
 	echo "Repositories:"
 	echo $REPOS | sed 's/^/	/' 
 }
@@ -99,7 +99,6 @@ ghar__movein_stage2() { # support function for movein
 		die 1 "movein: git doesn't seem to be installed on the remote host"
 	fi
 
-	REPOS=$(find $GHAR_DIR ! -name .git -regex ..*.git$ -exec basename {} .git \;)
 	for REPO in $REPOS
 	do
 		git --git-dir=$GHAR_DIR/$REPO.git archive master\
