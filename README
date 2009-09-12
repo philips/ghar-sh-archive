@@ -2,7 +2,7 @@ ghar (git: home as repository)
 
 ghar can help you manage your $HOME in git using a collection of git
 repos seperated by topic or privacy. For example if you work on a
-variety of machines and want to syncronize your .emacs but not your .ssh
+variety of machines and want to synchronize your .emacs but not your .ssh
 then ghar is for you.
 
 INSTALL
