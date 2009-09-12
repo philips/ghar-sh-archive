@@ -1,4 +1,5 @@
 #!/bin/sh
+# vim: noexpandtab shiftwidth=4 tabstop=4
 # Copyright (C) 2009 Brandon Philips <brandon@ifup.org>
 # Copyright (C) 2009 Graham Forest <vitaminmoo@obsoleet.org>
 # Copyright (C) 2009 Gavin McQuillan <gavin@omnifario.us>
@@ -43,14 +44,14 @@ die() {
 }
 
 ghar_init() { # set up ghar's configuration file
-	[ $# != 0 ] && die 1  "init: too many arguments"
+	[ $# != 0 ] && die 1 "init: too many arguments"
 	[ -e $GHAR_DIR ] && die 1 "Cannot init $GHAR_DIR already exists!"
 
 	mkdir $GHAR_DIR
 }
 
 ghar_create() { # create a new repo to add files to
-	[ $# != 1 ] && die 1  "create: wrong number of arguments"
+	[ $# != 1 ] && die 1 "create: wrong number of arguments"
 	
 	[ ! -e $GHAR_DIR ] && ghar_init
 	GITDIR=$GHAR_DIR/$1.git
@@ -65,7 +66,7 @@ ghar_create() { # create a new repo to add files to
 }
 
 ghar_list() { # list all repos available for use
-	[ $# != 0 ] && die 1  "list: wrong number of arguments"
+	[ $# != 0 ] && die 1 "list: wrong number of arguments"
 	[ -z $REPOS ] && return
 	echo "Repositories:"
 	echo $REPOS | sed 's/^/	/' 
