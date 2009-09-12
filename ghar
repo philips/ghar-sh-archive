@@ -72,6 +72,19 @@ ghar_list() { # list all repos available for use
 	echo $REPOS | sed 's/^/	/' 
 }
 
+ghar_status() { # list all repos with uncommitted changes
+	[ $# != 0 ] && die 1 "status: wrong number of arguments"
+	[ -z "$REPOS" ] && die 1 "no repositories currently exist"
+	echo "Repositories with modified files:"
+	echo -n "	"
+	for REPO in $REPOS
+	do
+		ghar_$REPO status -a > /dev/null
+		[ $? = 0 ] && echo -n "$REPO "
+	done
+	echo
+}
+
 ghar_movein() { # initialize ghar on a remote host
 	[ $# -lt 2 ] && die 1 "movein: not enough arguments"
 	TARGET=${!#} # last arg
