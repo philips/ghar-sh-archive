@@ -77,17 +77,27 @@ ghar_movein() { # initialize ghar on a remote host
 	TARGET=${!#} # last arg
 	REPOS_TO_COPY=$(echo $@ | sed "s#$TARGET##") # pop
 
+	MERGE_FILE=$(mktemp)
+
+	echo "+ $GHAR_DIR/" >> $MERGE_FILE
+	echo "+ $IAM" >> $MERGE_FILE
 	for REPO in $REPOS_TO_COPY
 	do
-		REPO_INCLUDES="$REPO_INCLUDES --include=$REPO.git --include=$REPO.git/**"
+		echo "+ $REPO.git" >> $MERGE_FILE
+		echo "+ $REPO.git/**" >> $MERGE_FILE
 	done
+	echo '- *' >> $MERGE_FILE
 
 	[ z"$SSH_AGENT_PID" != "z" ] && ssh-copy-id "$TARGET"
 
 	# less passwords to copy this way
 	[ ! -f "$GHAR_DIR/$IAM" ] && cp -L "$0" "$GHAR_DIR"
-	rsync -az --include="$GHAR_DIR/" --include="$IAM" $REPO_INCLUDES\
-		--exclude='*' "$GHAR_DIR/" "$TARGET:.ghar"
+
+	rsync -az --exclude-from=$MERGE_FILE\
+		"$GHAR_DIR/" "$TARGET:.ghar"
+
+	rm -f $MERGE_FILE
+
 	ssh "$TARGET" ".ghar/$IAM _movein_stage2"
 }
 
