@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# this script "fakes" out ssh for testing by cding to the "target" dir
+# and executing the specified command. pretty limited.
+#
+
+mkdir -p "$1" &&
+HOME=$(cd "$1" && pwd) # get the absolute path - janky, yes
+export GHAR_HOME=$HOME
+export GHAR_DIR=$GHAR_HOME/.ghar
+cd $1
+shift
+
+exec ./$@

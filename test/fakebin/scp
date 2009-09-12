@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# this script "fakes" out scp/rsync type programs for testing by
+# replacing any : in the last argument with :, and premaking dirs
+#
+
+TARGET=${!#}
+NEWTARGET=$(echo $TARGET | sed 's#:#/#')
+
+mkdir -p $NEWTARGET
+
+NEWARGS=$(echo "$*" | sed 's/ [^[:blank:]]*$//')
+
+exec /usr/bin/$(basename $0) $NEWARGS $NEWTARGET

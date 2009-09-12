@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# ssh-copy-id is safely ignored for testing
+#
+
+true
