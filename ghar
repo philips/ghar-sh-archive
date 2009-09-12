@@ -43,7 +43,7 @@ die() {
 	exit $1
 }
 
-ghar_init() { # set up ghar's configuration file
+ghar__init() { # set up required files
 	[ $# != 0 ] && die 1 "init: too many arguments"
 	[ -e $GHAR_DIR ] && die 1 "Cannot init $GHAR_DIR already exists!"
 
@@ -53,7 +53,7 @@ ghar_init() { # set up ghar's configuration file
 ghar_create() { # create a new repo to add files to
 	[ $# != 1 ] && die 1 "create: wrong number of arguments"
 	
-	[ ! -e $GHAR_DIR ] && ghar_init
+	[ ! -e $GHAR_DIR ] && ghar__init
 	GITDIR=$GHAR_DIR/$1.git
 
 	for r in $REPOS; do
@@ -76,7 +76,7 @@ ghar_help() { # provide help
 	echo "git home as repository"
 	echo "usage: ghar <function|repository> [git command]"
 	echo "Commands:"
-	grep "^ghar_.*() {" $0 | cut -d_ -f2\
+	grep "^ghar_[[:alnum:]]*() {" $0 | cut -d_ -f2\
 		| sed 's/^/	/; s/() { # /	- /'
 	ghar_list
 }
