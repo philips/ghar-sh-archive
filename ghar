@@ -25,7 +25,10 @@ IAM=`basename $0`
 
 create_repo_alias() {
 	eval "ghar_$1() \
-		{ git --git-dir=$GHAR_DIR/$1.git --work-tree=$GHAR_HOME \$@; }"
+	{ \
+		[ \$# = 0 ] && die 1 \"$1 usage: ghar $1 GITCOMMANDS\";
+		git --git-dir=$GHAR_DIR/$1.git --work-tree=$GHAR_HOME \$@;\
+	}"
 }
 
 for i in $REPOS; do
@@ -44,20 +47,20 @@ die() {
 }
 
 ghar__init() { # set up required files
-	[ $# != 0 ] && die 1 "init: too many arguments"
+	[ $# != 0 ] && die 1 "init usage: $IAM _init"
 	[ -e $GHAR_DIR ] && die 1 "Cannot init $GHAR_DIR already exists!"
 
 	mkdir $GHAR_DIR
 }
 
 ghar_create() { # create a new repo to add files to
-	[ $# != 1 ] && die 1 "create: wrong number of arguments"
+	[ $# != 1 ] && die 1 "create usage: $IAM create REPOSITORY"
 	
 	[ ! -e $GHAR_DIR ] && ghar__init
 	GITDIR=$GHAR_DIR/$1.git
 
 	for r in $REPOS; do
-		[ $r = $1 ] && die 1 "create: $1 already exists"
+		[ $r = $1 ] && die 1 "create: repository $1 already exists"
 	done
 
 	create_repo_alias $1
@@ -66,15 +69,15 @@ ghar_create() { # create a new repo to add files to
 }
 
 ghar_list() { # list all repos available for use
-	[ $# != 0 ] && die 1 "list: wrong number of arguments"
+	[ $# != 0 ] && die 1 "list usage: $IAM list"
 	[ -z "$REPOS" ] && return
 	echo "Repositories:"
 	echo $REPOS | sed 's/^/	/' 
 }
 
 ghar_status() { # list all repos with uncommitted changes
-	[ $# != 0 ] && die 1 "status: wrong number of arguments"
-	[ -z "$REPOS" ] && die 1 "no repositories currently exist"
+	[ $# != 0 ] && die 1 "status usage: $IAM status"
+	[ -z "$REPOS" ] && die 1 "status: no repositories currently exist"
 	echo "Repositories with modified files:"
 	echo -n "	"
 	for REPO in $REPOS
@@ -86,7 +89,7 @@ ghar_status() { # list all repos with uncommitted changes
 }
 
 ghar_movein() { # initialize ghar on a remote host
-	[ $# -lt 2 ] && die 1 "movein: not enough arguments"
+	[ $# -lt 2 ] && die 1 "movein usage: $IAM movein REPO [REPOS...] [USER@]TARGET"
 	TARGET=${!#} # last arg
 	REPOS_TO_COPY=$(echo $@ | sed "s#$TARGET##") # pop
 
@@ -115,7 +118,7 @@ ghar_movein() { # initialize ghar on a remote host
 }
 
 ghar__movein_stage2() { # support function for movein
-	[ $# != 0 ] && die 1 "_movein_stage2: wrong number of arguments"
+	[ $# != 0 ] && die 1 "_movein_stage2 usage: $IAM _movein_stage2"
 
 	if [ -z $(which git) ]; then
 		rm -f "$0"
