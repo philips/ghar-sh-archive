@@ -1,4 +1,4 @@
-
+Test movein and status
 
 	$ ghar create dotfiles > /dev/null
 	$ touch %GHAR_HOME/.some_config
@@ -27,3 +27,9 @@
 	> `-- .some_config2
 	>
 	> 3 directories, 3 files
+	
+	$ echo foobar > %GHAR_HOME/.some_config
+	$ ghar status
+	> Repositories with modified files:
+	> 	dotfiles 
+	
