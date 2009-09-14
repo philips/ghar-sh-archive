@@ -72,7 +72,9 @@ ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1 "list usage: $IAM list"
 	[ -z "$REPOS" ] && return
 	echo "Repositories:"
-	echo $REPOS | sed 's/^/	/' 
+	for i in $REPOS; do
+		echo $i | sed 's/^/	/';
+	done
 }
 
 ghar_status() { # list all repos with uncommitted changes
