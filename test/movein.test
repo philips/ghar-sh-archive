@@ -17,13 +17,13 @@
 
 	$ ghar movein dotfiles dotfiles2 %TEMP_DIR/new-machine/
 
-    $ tree -a -L 2 %TEMP_DIR/new-machine/
-    > %TEMP_DIR/new-machine/
-    > |-- .ghar
-    > |   |-- dotfiles.git
-    > |   |-- dotfiles2.git
-    > |   `-- ghar
-    > |-- .some_config
-    > `-- .some_config2
-    >
-    > 3 directories, 3 files
+	$ tree -a -L 2 %TEMP_DIR/new-machine/
+	> %TEMP_DIR/new-machine/
+	> |-- .ghar
+	> |   |-- dotfiles.git
+	> |   |-- dotfiles2.git
+	> |   `-- ghar
+	> |-- .some_config
+	> `-- .some_config2
+	>
+	> 3 directories, 3 files
