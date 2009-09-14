@@ -6,7 +6,7 @@ export GHAR_HOME := $(abspath ./home-test)
 export GHAR_DIR := $(GHAR_HOME)/.ghar
 export TEMP_DIR := $(abspath ./tempdir)
 
-default: $(TESTS)
+default: clean $(TESTS)
 
 clean:
 	rm -Rf $(GHAR_HOME) $(TEMP_DIR)
