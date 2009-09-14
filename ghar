@@ -68,13 +68,29 @@ ghar_create() { # create a new repo to add files to
 	echo "*" > $GITDIR/info/exclude
 }
 
+ghar__list_repos() { # list repos
+	[ $# != 1 ] && die 1 "list_repos() called improperly"
+	[ -z "$REPOS" ] && return
+
+	pretty=$1
+
+	if [ "1" == "$pretty" ]; then
+		echo "Repositories:"
+		for i in $REPOS; do
+			echo $i | sed 's/^/	/';
+		done
+	else
+		for i in $REPOS; do
+			echo $i
+		done
+	fi
+}
+
 ghar_list() { # list all repos available for use
 	[ $# != 0 ] && die 1 "list usage: $IAM list"
 	[ -z "$REPOS" ] && return
-	echo "Repositories:"
-	for i in $REPOS; do
-		echo $i | sed 's/^/	/';
-	done
+
+	ghar__list_repos 0
 }
 
 ghar_status() { # list all repos with uncommitted changes
@@ -140,7 +156,7 @@ ghar_help() { # provide help
 	echo "Commands:"
 	grep "^ghar_[[:alnum:]]*() {" $0 | cut -d_ -f2\
 		| sed 's/^/	/; s/() { # /	- /'
-	ghar_list
+	ghar__list_repos 1
 }
 
 FUNCTION=$1
