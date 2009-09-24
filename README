@@ -21,3 +21,6 @@ EXAMPLE
  $ ghar create mutt
  $ ghar mutt add -f .mutt
  $ ghar mutt commit
+
+ # copy your mutt config onto another host
+ $ ghar movein mutt remotehost
